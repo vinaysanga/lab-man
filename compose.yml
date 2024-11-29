@@ -1,0 +1,28 @@
+name: lab-man
+
+services:
+  db:
+    restart: unless-stopped
+    build: 
+      context: .
+      dockerfile: ./src/lib/server/db/dockerfile
+    environment: 
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 14bM4n25
+      POSTGRES_DB: lab-man
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  
+  website:
+    restart: unless-stopped
+    build: 
+      context: .
+    ports:
+      - 3000:3000
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - db
+
+volumes:
+  pgdata:

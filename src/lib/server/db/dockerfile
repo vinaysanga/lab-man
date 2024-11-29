@@ -1,0 +1,18 @@
+FROM postgres:17-alpine
+
+WORKDIR /app
+
+
+COPY src/lib/server/db/schema.ts src/lib/server/db/schema.ts
+COPY drizzle.config.ts .
+COPY package.json .
+COPY .env .
+
+RUN apk update && apk add --no-cache nodejs npm
+
+RUN npm i -g pnpm
+RUN pnpm install
+RUN pnpm db:generate
+
+RUN mv /app/migrations/*.sql /docker-entrypoint-initdb.d/
+COPY src/lib/server/db/scripts/*.sql /docker-entrypoint-initdb.d/
