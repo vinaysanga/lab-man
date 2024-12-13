@@ -29,7 +29,7 @@ if (!building) {
  * it will delete the session token cookie.
  */
 export const handle: Handle = async ({ event, resolve }) => {
-  const sessionToken = event.cookies.get("session") ?? null;
+  const sessionToken = event.cookies.get(auth.sessionCookieName) ?? null;
   if (!sessionToken) {
     event.locals.session = null;
     event.locals.username = null;

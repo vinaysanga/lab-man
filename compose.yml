@@ -7,9 +7,9 @@ services:
       context: .
       dockerfile: ./src/lib/server/db/dockerfile
     environment: 
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 14bM4n25
-      POSTGRES_DB: lab-man
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-lab-man}
     volumes:
       - pgdata:/var/lib/postgresql/data
   
@@ -17,10 +17,11 @@ services:
     restart: unless-stopped
     build: 
       context: .
+      args:
+        NODE_ENV: production
+        PORT: 3000
     ports:
-      - 3000:3000
-    environment:
-      NODE_ENV: production
+      - "3000:3000"
     depends_on:
       - db
 

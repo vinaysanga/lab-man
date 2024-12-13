@@ -15,9 +15,8 @@ export const POST = async (event: RequestEvent) => {
       const matriculationNumber = row[0];
       const name = row[1];
       const surname = row[2];
-      const yearFrom = row[3];
-      const yearTo = row[4];
-      const email = row[5];
+      const [yearFrom, yearTo] = row[3].split('-').map((year: string) => year.trim());
+      const email = row[4];
       const username = `${name}.${surname}`.toLowerCase();
       const password = generatePassword(username);
       const passwordHash = await hashPassword(password);
@@ -33,7 +32,10 @@ export const POST = async (event: RequestEvent) => {
       await query.createUser(username, passwordHash, Role.STUDENT);
       await query.createUserPriority(username);
       console.log(username, password);
-      await event.fetch("/api/send-mail", {
+      
+      // Send email asynchronously without waiting
+      console.log("Sending email to", email);
+      event.fetch("/api/send-mail", {
         method: "POST",
         body: JSON.stringify({
           to: email as string,
@@ -59,6 +61,12 @@ Best regards,
 The Lab Man Team
 `,
         }),
+      }).catch(error => {
+        console.error('Failed to send email - Error details:', {
+          error: error.message,
+          stack: error.stack,
+          timestamp: new Date().toISOString()
+        });
       });
     }
   } catch (error) {

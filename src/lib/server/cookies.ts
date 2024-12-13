@@ -1,4 +1,5 @@
 import type { RequestEvent } from "@sveltejs/kit";
+import { sessionCookieName } from "./session";
 
 
 /**
@@ -9,7 +10,7 @@ import type { RequestEvent } from "@sveltejs/kit";
  * @param expiresAt The date at which the cookie will expire.
  */
 export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date): void {
-	event.cookies.set("session", token, {
+	event.cookies.set(sessionCookieName, token, {
 		httpOnly: true,
 		sameSite: "lax",
 		secure: false,
@@ -24,7 +25,7 @@ export function setSessionTokenCookie(event: RequestEvent, token: string, expire
  * @param event The event object.
  */
 export function deleteSessionTokenCookie(event: RequestEvent): void {
-	event.cookies.set("session", "", {
+	event.cookies.set(sessionCookieName, "", {
 		httpOnly: true,
 		sameSite: "lax",
 		secure: false,

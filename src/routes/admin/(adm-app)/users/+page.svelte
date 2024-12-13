@@ -25,9 +25,9 @@
             })
             .finally(() => {
               isProcessing = false;
+              window.location.reload();
             });
         });
-        window.location.reload();
       }
     }
   });
@@ -121,6 +121,7 @@
                 placeholder="Matriculation Number"
                 class="input input-floating peer"
                 name="matriculationNumber"
+                id="matriculationNumber"
                 pattern="^[0-9]+$"
                 required
               />
@@ -135,6 +136,7 @@
                 placeholder="Matti"
                 class="input input-floating peer"
                 name="name"
+                id="name"
                 pattern="[A-Za-z]+$"
                 required
               />
@@ -149,6 +151,7 @@
                 placeholder="Mäkelainen"
                 class="input input-floating peer"
                 name="surname"
+                id="surname"
                 pattern="[A-Za-z]+$"
                 required
               />
@@ -163,6 +166,7 @@
                 placeholder="20XX - 20XX"
                 class="input input-floating peer"
                 name="yearOfStudy"
+                id="yearOfStudy"
                 required
               />
               <label for="yearOfStudy" class="input-floating-label">
@@ -176,6 +180,7 @@
                 placeholder="matti.mäkelainen@student.univaq.it"
                 class="input input-floating peer"
                 name="email"
+                id="email"
                 pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]$"
                 required
               />

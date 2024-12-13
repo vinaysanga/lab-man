@@ -1,0 +1,48 @@
+name: lab-man
+
+services:
+  db:
+    restart: unless-stopped
+    build: 
+      context: .
+      dockerfile: ./src/lib/server/db/dockerfile
+    environment: 
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-lab-man}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # Expose PostgreSQL port for development tools
+    ports:
+      - "5432:5432"
+  
+  website:
+    restart: unless-stopped
+    build: 
+      context: .
+      args:
+        NODE_ENV: development
+        PORT: 5173
+    ports:
+      - "5173:5173"
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - db
+    develop:
+      watch:
+        - path: ./src
+          target: /app/src
+          action: sync
+        - path: ./static
+          target: /app/static
+          action: sync
+        - path: package.json
+          target: /app/package.json
+          action: sync
+        - path: pnpm-lock.yaml
+          target: /app/pnpm-lock.yaml
+          action: sync
+
+volumes:
+  pgdata:

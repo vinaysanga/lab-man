@@ -6,11 +6,21 @@ COPY . .
 
 RUN npm i -g pnpm
 RUN pnpm install
-RUN pnpm build
 
-ENV NODE_ENV=production
-ENV ORIGIN=http://localhost:3000
+ARG NODE_ENV=production
+ARG PORT=3000
+ENV NODE_ENV=$NODE_ENV
+ENV PORT=$PORT
+ENV ORIGIN=http://localhost:$PORT
 
-EXPOSE 3000
+EXPOSE $PORT
 
-CMD ["sh", "-c", "node --env-file=.env build"]
+RUN if [ "$NODE_ENV" = "production" ]; then \
+    pnpm build; \
+    fi
+
+CMD if [ "$NODE_ENV" = "production" ]; then \
+    node --env-file=.env build; \
+    else \
+    pnpm dev --host --port $PORT; \
+    fi

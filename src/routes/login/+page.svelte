@@ -16,6 +16,7 @@
     class="card p-10 md:p-15 border border-neutral/10 rounded-box flex flex-col gap-8"
     method="post"
     use:enhance
+    autocomplete="on"
   >
     <h2 class="text-3xl md:text-4xl text-center">Lab Man</h2>
     <div class="flex flex-col gap-8">
@@ -26,6 +27,7 @@
           placeholder="Enter username"
           class="input input-floating peer"
           name="username"
+          autocomplete="username"
         />
         <label for="username" class="input-floating-label">Username</label>
       </div>
@@ -36,6 +38,7 @@
           class="input input-floating peer"
           placeholder="Enter password"
           name="password"
+          autocomplete="current-password"
         />
         <label for="password" class="input-floating-label">Password</label>
       </div>
