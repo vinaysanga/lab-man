@@ -2,46 +2,34 @@ name: lab-man
 
 services:
   db:
-    restart: unless-stopped
-    build: 
-      context: .
-      dockerfile: ./src/lib/server/db/dockerfile
-    environment: 
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB:-lab-man}
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    # Expose PostgreSQL port for development tools
-    ports:
-      - "5432:5432"
-  
+    extends:
+      file: compose.yml
+      service: db
+
   website:
-    restart: unless-stopped
-    build: 
-      context: .
-      args:
-        NODE_ENV: development
-        PORT: 5173
+    extends:
+      file: compose.yml
+      service: website
+    environment:
+      - NODE_ENV=development
+      - PORT=5173
     ports:
       - "5173:5173"
-    environment:
-      NODE_ENV: development
-    depends_on:
-      - db
+      - "9229:9229"  # Debug port
+    command: node --inspect=0.0.0.0:9229 ./node_modules/vite/bin/vite.js dev --host --port 5173
     develop:
       watch:
         - path: ./src
-          target: /app/src
+          target: /lab-man/src
           action: sync
         - path: ./static
-          target: /app/static
+          target: /lab-man/static
           action: sync
         - path: package.json
-          target: /app/package.json
+          target: /lab-man/package.json
           action: sync
         - path: pnpm-lock.yaml
-          target: /app/pnpm-lock.yaml
+          target: /lab-man/pnpm-lock.yaml
           action: sync
 
 volumes:

@@ -55,14 +55,23 @@ This setup includes hot reloading and others. For your dev needs.
    git clone https://github.com/vinaysanga/lab-man.git
    cd lab-man
    ```
+2. Install dev dependencies (so that your IDE doesn't complain)
 
-2. Start development environment with watch mode
+   ```bash
+   npm install
+   ```
+   OR
+   ```bash
+   pnpm install
+   ```
+
+3. Start development environment with watch mode
 
    ```bash
    docker compose -f compose.dev.yml up --build --watch
    ```
 
-3. Access the application at [http://localhost:5173](http://localhost:5173)
+4. Access the application at [http://localhost:5173](http://localhost:5173)
 
 #### Features
 
@@ -91,6 +100,41 @@ The development setup uses [`compose.dev.yml`](./compose.dev.yml) which includes
 WIP - Coming soon
 ```
 
+### Development Setup
+
+1. Clone the repository
+   ```bash
+   git clone https://github.com/vinaysanga/lab-man.git
+   cd lab-man
+   ```
+
+2. Install dev dependencies (so that your IDE doesn't complain)
+   ```bash
+   npm install
+   ```
+   OR
+   ```bash
+   pnpm install
+   ```
+
+3. Start development environment with watch mode
+   ```bash
+   docker compose -f compose.dev.yml up --build --watch
+   ```
+
+4. Access the application at [http://localhost:5173](http://localhost:5173)
+
+### Debugging
+
+The project is configured for VS Code debugging. To debug the application:
+
+1. Start the application in debug mode (it's already configured in [compose.dev.yml](./compose.dev.yml) and a VS Code launch configuration is already defined at [launch.json](./.vscode/launch.json)
+2. In VS Code:
+   - Set your breakpoints
+   - Go to Run and Debug (Ctrl/Cmd + Shift + D)
+   - Select "Docker: Attach to Node" from the dropdown.
+3. The debugger should automatically attach to the running container and will stop at your breakpoints.
+
 </details>
 
 ### Bulk User Upload
@@ -105,6 +149,6 @@ The application supports bulk user upload via Excel files. A template file is pr
   - Academic Year (format: YYYY-YYYY)
   - Email
 
-Use this template as a reference when preparing your user data for upload.
+## License
 
-That is it for now!
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

@@ -1,7 +1,6 @@
 FROM postgres:17-alpine
 
-WORKDIR /app
-
+WORKDIR /lab-man
 
 COPY src/lib/server/db/schema.ts src/lib/server/db/schema.ts
 COPY drizzle.config.ts .
@@ -14,5 +13,5 @@ RUN npm i -g pnpm
 RUN pnpm install
 RUN pnpm db:generate
 
-RUN mv /app/migrations/*.sql /docker-entrypoint-initdb.d/
+RUN mv /lab-man/migrations/*.sql /docker-entrypoint-initdb.d/
 COPY src/lib/server/db/scripts/*.sql /docker-entrypoint-initdb.d/
