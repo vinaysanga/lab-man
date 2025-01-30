@@ -90,17 +90,23 @@ export const blockedBookingSlots = pgTable(
   "blockedBookingSlots",
   {
     id: serial("id").primaryKey(),
-    blockedDate: date("blockedDate", {
+    startDate: date("startDate", {
       mode: "date",
     }).notNull(),
+    endDate: date("endDate", {
+      mode: "date",
+    }),
     startTime: time("startTime", { withTimezone: false }).notNull(),
     endTime: time("endTime", { withTimezone: false }).notNull(),
+    recurrence: text("recurrence").notNull(),
   },
   (t) => ({
-    unique_user_booking_slot: unique("unique_blocked_booking_slot").on(
-      t.blockedDate,
+    unique_blocked_booking_slot: unique("unique_blocked_booking_slot").on(
+      t.startDate,
+      t.endDate,
       t.startTime,
-      t.endTime
+      t.endTime,
+      t.recurrence
     ),
   })
 );

@@ -1,6 +1,7 @@
 import * as query from "$lib/server/db/query";
 import type { RequestEvent } from "@sveltejs/kit";
 import { json } from "@sveltejs/kit";
+import { Recurrence } from "$lib/enums/recurrence";
 export const DELETE = async (event: RequestEvent) => {
   if (!event.locals.session) {
     return json({ message: "Not logged in" }, { status: 401 });

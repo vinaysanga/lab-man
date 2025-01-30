@@ -1,3 +1,4 @@
+import { Recurrence } from "$lib/enums/recurrence";
 import { db } from "$lib/server/db";
 import * as table from "$lib/server/db/schema";
 import {
@@ -10,6 +11,8 @@ import {
   gte,
   inArray,
   lt,
+  lte,
+  or,
   sql
 } from "drizzle-orm";
 
@@ -84,7 +87,24 @@ export const createUnconfirmedBooking = async (
     .from(table.blockedBookingSlots)
     .where(
       and(
-        eq(table.blockedBookingSlots.blockedDate, bookingDate),
+        or(
+          and(
+            eq(table.blockedBookingSlots.startDate, bookingDate),
+            eq(table.blockedBookingSlots.recurrence, Recurrence.oneTime)
+          ),
+          and(
+            lte(table.blockedBookingSlots.startDate, bookingDate),
+            gte(table.blockedBookingSlots.endDate, bookingDate),
+            eq(table.blockedBookingSlots.recurrence, Recurrence.daily)
+          ),
+          and(
+            lte(table.blockedBookingSlots.startDate, bookingDate),
+            gte(table.blockedBookingSlots.endDate, bookingDate),
+            eq(table.blockedBookingSlots.recurrence, Recurrence.weekly),
+            // Convert dates to ISO string for the day of week comparison
+            sql`EXTRACT(DOW FROM ${bookingDate.toISOString()}::timestamp) = EXTRACT(DOW FROM ${table.blockedBookingSlots.startDate})`
+          )
+        ),
         eq(table.blockedBookingSlots.startTime, startTime)
       )
     );
@@ -199,14 +219,18 @@ export const getUserPriority = async (username: string) =>
     .where(eq(table.userPriorities.username, username));
 
 export const createBlockedSlot = async (
-  blockedDate: Date,
+  startDate: Date,
   startTime: string,
-  endTime: string
+  endTime: string,
+  recurrence: string,
+  endDate?: Date
 ) =>
   await db.insert(table.blockedBookingSlots).values({
-    blockedDate,
+    startDate,
+    endDate,
     startTime,
     endTime,
+    recurrence,
   });
 
 export const deleteBlockedSlot = async (id: number) =>

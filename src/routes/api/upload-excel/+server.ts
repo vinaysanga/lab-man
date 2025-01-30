@@ -9,13 +9,35 @@ export const POST = async (event: RequestEvent) => {
     return json({ message: "Not logged in" }, { status: 401 });
   }
   const { data } = await event.request.json();
-  const rows = data.slice(1);
+  // Filter out rows where any required field is empty
+  const rows = data.slice(1).filter((row: any[]) => {
+    if (!row || row.length < 5) return false;
+    // Check if all required fields have non-empty values
+    return row.slice(0, 5).every(cell => 
+      cell !== null && 
+      cell !== undefined && 
+      cell.toString().trim() !== ''
+    );
+  });
+  
   try {
     for (const row of rows) {
-      const matriculationNumber = row[0];
-      const name = row[1];
-      const surname = row[2];
-      const [yearFrom, yearTo] = row[3].split('-').map((year: string) => year.trim());
+      // At this point, we know the row has all required fields
+      const matriculationNumber = row[0].toString().trim();
+      const name = row[1].toString().trim();
+      const surname = row[2].toString().trim();
+      const yearRange = row[3];
+      
+      if (!yearRange || typeof yearRange !== 'string') {
+        throw new Error(`Invalid year range format for student ${name} ${surname}. Expected a string in format 'YYYY-YYYY'`);
+      }
+      
+      const yearParts = yearRange.split('-');
+      if (yearParts.length !== 2) {
+        throw new Error(`Invalid year range format for student ${name} ${surname}. Expected format 'YYYY-YYYY' but got '${yearRange}'`);
+      }
+      
+      const [yearFrom, yearTo] = yearParts.map((year: string) => year.trim());
       const email = row[4];
       const username = `${name}.${surname}`.toLowerCase();
       const password = generatePassword(username);

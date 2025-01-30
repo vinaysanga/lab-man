@@ -1,7 +1,14 @@
 import * as query from "$lib/server/db/query";
 import { fail } from "@sveltejs/kit";
 import type { PostgresError } from "postgres";
-import type { Actions } from "./$types";
+import type { Actions, PageServerLoad } from "./$types";
+
+export const load: PageServerLoad = async () => {
+  const blockedSlots = await query.getAllBlockedSlots();
+  return {
+    blockedSlots,
+  };
+};
 
 export const actions: Actions = {
   default: async (event) => {

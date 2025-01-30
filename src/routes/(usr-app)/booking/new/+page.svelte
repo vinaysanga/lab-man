@@ -1,6 +1,10 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  let { form }: { form: any } = $props();
+  import type { PageServerData } from "./$types";
+
+  let { form, data }: { form: any; data: PageServerData } = $props();
+
+  let { blockedSlots } = data;
 </script>
 
 <svelte:head>
@@ -342,3 +346,4 @@
     <p class="text-green-500 text-2xl">{form?.success ?? ""}</p>
   </div>
 </section>
+
