@@ -19,9 +19,10 @@ services:
       context: .
       args:
         NODE_ENV: production
-        PORT: 3000
+        WEB_PORT: ${WEB_PORT}
+        ORIGIN: ${ORIGIN}
     ports:
-      - "3000:3000"
+      - "${WEB_PORT}:${WEB_PORT}"
     depends_on:
       - db
 
